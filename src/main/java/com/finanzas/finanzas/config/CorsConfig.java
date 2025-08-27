@@ -1,4 +1,3 @@
-// src/main/java/com/finanzas/finanzas/config/CorsConfig.java
 package com.finanzas.finanzas.config;
 
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +10,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-            .allowedOrigins("*")
+            .allowedOrigins("http://localhost:3000", "https://verdant-cactus-368d2e.netlify.app")
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")
             .allowCredentials(true);
