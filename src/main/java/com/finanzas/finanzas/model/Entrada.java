@@ -24,6 +24,9 @@ public class Entrada {
     private BigDecimal valor;
     private LocalDate data;
     private boolean salario;
+    private String userId;
+
+    public Entrada() {}
 
     public Long getId() {
         return id;
@@ -63,5 +66,13 @@ public class Entrada {
 
     public void setSalario(boolean salario) {
         this.salario = salario;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

@@ -24,6 +24,7 @@ public class Saida {
     private BigDecimal valor;
     private LocalDate data;
     private String tipo;
+    private String userId;
 
     public Long getId() {
         return id;
@@ -63,5 +64,13 @@ public class Saida {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

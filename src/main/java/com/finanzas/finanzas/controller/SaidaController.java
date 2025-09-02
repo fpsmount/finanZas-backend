@@ -15,24 +15,25 @@ public class SaidaController {
     private SaidaRepository saidaRepository;
 
     @GetMapping
-    public List<Saida> getAllSaidas() {
-        return saidaRepository.findAll();
+    public List<Saida> getAllSaidas(@RequestParam String userId) {
+        return saidaRepository.findByUserId(userId);
     }
 
     @PostMapping
-    public Saida createSaida(@RequestBody Saida saida) {
+    public Saida createSaida(@RequestBody Saida saida, @RequestParam String userId) {
+        saida.setUserId(userId);
         return saidaRepository.save(saida);
     }
 
     @GetMapping("/{id}")
-    public Saida getSaidaById(@PathVariable Long id) {
-        return saidaRepository.findById(id).orElse(null);
+    public Saida getSaidaById(@PathVariable Long id, @RequestParam String userId) {
+        return saidaRepository.findById(id).filter(s -> s.getUserId().equals(userId)).orElse(null);
     }
 
     @PutMapping("/{id}")
-    public Saida updateSaida(@PathVariable Long id, @RequestBody Saida saidaDetails) {
+    public Saida updateSaida(@PathVariable Long id, @RequestBody Saida saidaDetails, @RequestParam String userId) {
         Saida saida = saidaRepository.findById(id).orElse(null);
-        if (saida != null) {
+        if (saida != null && saida.getUserId().equals(userId)) {
             saida.setDescricao(saidaDetails.getDescricao());
             saida.setValor(saidaDetails.getValor());
             saida.setData(saidaDetails.getData());
@@ -43,7 +44,10 @@ public class SaidaController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteSaida(@PathVariable Long id) {
-        saidaRepository.deleteById(id);
+    public void deleteSaida(@PathVariable Long id, @RequestParam String userId) {
+        Saida saida = saidaRepository.findById(id).orElse(null);
+        if (saida != null && saida.getUserId().equals(userId)) {
+            saidaRepository.deleteById(id);
+        }
     }
 }

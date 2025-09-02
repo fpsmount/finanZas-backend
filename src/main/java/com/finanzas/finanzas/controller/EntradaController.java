@@ -15,24 +15,25 @@ public class EntradaController {
     private EntradaRepository entradaRepository;
 
     @GetMapping
-    public List<Entrada> getAllEntradas() {
-        return entradaRepository.findAll();
+    public List<Entrada> getAllEntradas(@RequestParam String userId) {
+        return entradaRepository.findByUserId(userId);
     }
 
     @PostMapping
-    public Entrada createEntrada(@RequestBody Entrada entrada) {
+    public Entrada createEntrada(@RequestBody Entrada entrada, @RequestParam String userId) {
+        entrada.setUserId(userId);
         return entradaRepository.save(entrada);
     }
 
     @GetMapping("/{id}")
-    public Entrada getEntradaById(@PathVariable Long id) {
-        return entradaRepository.findById(id).orElse(null);
+    public Entrada getEntradaById(@PathVariable Long id, @RequestParam String userId) {
+        return entradaRepository.findById(id).filter(e -> e.getUserId().equals(userId)).orElse(null);
     }
 
     @PutMapping("/{id}")
-    public Entrada updateEntrada(@PathVariable Long id, @RequestBody Entrada entradaDetails) {
+    public Entrada updateEntrada(@PathVariable Long id, @RequestBody Entrada entradaDetails, @RequestParam String userId) {
         Entrada entrada = entradaRepository.findById(id).orElse(null);
-        if (entrada != null) {
+        if (entrada != null && entrada.getUserId().equals(userId)) {
             entrada.setDescricao(entradaDetails.getDescricao());
             entrada.setValor(entradaDetails.getValor());
             entrada.setData(entradaDetails.getData());
@@ -43,7 +44,10 @@ public class EntradaController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteEntrada(@PathVariable Long id) {
-        entradaRepository.deleteById(id);
+    public void deleteEntrada(@PathVariable Long id, @RequestParam String userId) {
+        Entrada entrada = entradaRepository.findById(id).orElse(null);
+        if (entrada != null && entrada.getUserId().equals(userId)) {
+            entradaRepository.deleteById(id);
+        }
     }
 }
