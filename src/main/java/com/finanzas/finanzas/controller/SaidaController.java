@@ -5,7 +5,9 @@ import com.finanzas.finanzas.repository.SaidaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/saidas")
@@ -17,6 +19,12 @@ public class SaidaController {
     @GetMapping
     public List<Saida> getAllSaidas(@RequestParam String userId) {
         return saidaRepository.findByUserId(userId);
+    }
+
+    @GetMapping("/total")
+    public Map<String, BigDecimal> getTotalSaidas(@RequestParam String userId) {
+        BigDecimal total = saidaRepository.sumValorByUserId(userId);
+        return Map.of("total", total);
     }
 
     @PostMapping
