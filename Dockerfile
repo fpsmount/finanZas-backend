@@ -1,16 +1,15 @@
-FROM ubuntu:latest AS build
+# Stage 1 — Build
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 
-RUN apt-get update
-RUN apt-get install -y openjdk-17-jdk
+WORKDIR /app
 COPY . .
+RUN mvn clean package -DskipTests
 
-run apt-get install maven -y
-RUN mvn clean install -DskipTests
+# Stage 2 — Run
+FROM eclipse-temurin:17-jdk-jammy
 
-FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/finanzas-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
-
-COPY --from=build /target/finanzas-0.0.1-SNAPSHOT.jar app.jar
-
-ENTRYPOINT [ "java", "-jar", "app.jar" ]
+ENTRYPOINT ["java", "-jar", "app.jar"]
